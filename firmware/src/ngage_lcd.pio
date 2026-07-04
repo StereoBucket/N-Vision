@@ -1,0 +1,69 @@
+;; ngage_lcd.pio
+;;
+;; Samples the 8-bit N-Gage LCD parallel bus on each rising edge of the clock.
+;;
+;; DATA PINS  : 8 consecutive GPIOs configured with sm_config_set_in_pins().
+;;              Wire MSB-first so the captured byte matches the raw bus word:
+;;                in_base+7 = LCDM   (bus bit 7)
+;;                in_base+6 = LCDFSP (bus bit 6)
+;;                in_base+5 = LCDDe5 (bus bit 5)
+;;                in_base+4 = LCDDe4 (bus bit 4)
+;;                in_base+3 = LCDDe3 (bus bit 3)
+;;                in_base+2 = LCDDe2 (bus bit 2)
+;;                in_base+1 = LCDDe1 (bus bit 1)
+;;                in_base+0 = LCDDe0 (bus bit 0)
+;;
+;; CLOCK PIN  : any GPIO, configured with sm_config_set_jmp_pin().
+;;              Rising-edge triggered; fully independent of the data pin group.
+
+.program ngage_lcd
+
+.wrap_target
+wait_clk_low:
+    jmp pin, wait_clk_low   ; spin while clock is high
+wait_clk_rise:
+    jmp pin, sample         ; rising edge detected - go latch
+    jmp wait_clk_rise       ; still low, keep polling
+sample:
+    in pins, 8              ; latch all 8 data pins into ISR (shift left)
+    push noblock            ; push byte to RX FIFO; clears ISR even if FIFO full
+.wrap
+
+% c-sdk {
+// ---------------------------------------------------------------------------
+// ngage_lcd_program_init
+//
+// Configures a PIO state machine to capture the N-Gage LCD bus.
+//
+// Parameters:
+//   pio           : PIO instance (e.g. pio1)
+//   sm            : state machine index
+//   offset        : instruction-memory offset from pio_add_program()
+//   data_base_pin : first of 8 consecutive input GPIOs
+//                   (wire in_base+7 = LCDM, in_base+0 = LCDDe0)
+//   clk_pin       : clock GPIO (independent of data_base_pin)
+//   clk_div       : PIO clock divider (1.0f = full system clock)
+// ---------------------------------------------------------------------------
+static inline void ngage_lcd_program_init(PIO pio, uint sm, uint offset,
+                                          uint data_base_pin, uint clk_pin,
+                                          float clk_div)
+{
+    uint i;
+    for (i = 0; i < 8; ++i)
+        pio_gpio_init(pio, data_base_pin + i);
+    pio_gpio_init(pio, clk_pin);
+
+    pio_sm_set_consecutive_pindirs(pio, sm, data_base_pin, 8, false);
+    pio_sm_set_consecutive_pindirs(pio, sm, clk_pin, 1, false);
+
+    pio_sm_config c = ngage_lcd_program_get_default_config(offset);
+    sm_config_set_in_pins(&c, data_base_pin);    /* base for 'in pins, 8' */
+    sm_config_set_jmp_pin(&c, clk_pin);          /* clock for 'jmp pin'   */
+    sm_config_set_in_shift(&c, false, false, 8); /* shift left, no autopush */
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX); /* 8-deep RX FIFO */
+    sm_config_set_clkdiv(&c, clk_div);
+
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

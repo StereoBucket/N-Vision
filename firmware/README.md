@@ -1,16 +1,6 @@
 # Firmware
 
-## Compiling
-
-First install the [Raspberry Pi Pico SDK](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf).
-
-The project can then be compiled using CMake:
-```bash
-mkdir build
-cd build
-cmake -DPICO_COPY_TO_RAM=1 ..
-make
-```
+A PIO-based N-Gage LCD bus decoder.
 
 ## Licence and Credits
 

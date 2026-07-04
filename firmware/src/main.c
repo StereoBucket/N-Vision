@@ -1,3 +1,12 @@
+/** @file main.c
+ *
+ *  A modern clone of the Nokia N-Gage display converter.
+ *
+ *  Copyright (c) 2026, Michael Fitzmayer. All rights reserved.
+ *  SPDX-License-Identifier: MIT
+ *
+ **/
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -50,6 +59,9 @@ int main()
     // Core 1 will wait until it sees the first colour buffer, then
     // start up the DVI signalling.
     multicore_launch_core1(core1_main);
+
+    // Initialise the PIO-based N-Gage LCD bus decoder.
+    ngage_lcd_init();
 
     // Pass out pointers into our preprepared image, discard the
     // pointers when returned to us.

@@ -1,3 +1,19 @@
+# == DO NOT EDIT THE FOLLOWING LINES for the Raspberry Pi Pico VS Code Extension to work ==
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 2.3.0)
+set(toolchainVersion 15_2_Rel1)
+set(picotoolVersion 2.3.0)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+# ====================================================================================
+set(PICO_BOARD pico CACHE STRING "Board type")
+
 cmake_minimum_required(VERSION 3.12)
 include(pico_sdk_import.cmake)
 
@@ -20,12 +36,16 @@ add_executable(${PROJECT_NAME}
   ${CMAKE_SOURCE_DIR}/src/main.c
   ${CMAKE_SOURCE_DIR}/src/ngage.c)
 
+pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/ngage_lcd.pio)
+
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+target_compile_definitions(PICO_COPY_TO_RAM=1)
 
 target_link_libraries(${PROJECT_NAME}
   pico_stdlib
   pico_multicore
   pico_util
+  hardware_pio
   libdvi)
 
 # create map/bin/hex file etc.
