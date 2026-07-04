@@ -1,6 +1,6 @@
 /** @file main.c
  *
- *  A modern clone of the Nokia N-Gage display converter.
+ *  A PIO-based N-Gage LCD bus decoder.
  *
  *  Copyright (c) 2026, Michael Fitzmayer. All rights reserved.
  *  SPDX-License-Identifier: MIT
