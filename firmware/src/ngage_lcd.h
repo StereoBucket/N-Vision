@@ -10,12 +10,12 @@
  *
  *               NGAGE_LCD_DATA_BASE_PIN + 7  =  LCDM   (bus bit 7)
  *               NGAGE_LCD_DATA_BASE_PIN + 6  =  LCDFSP (bus bit 6)
- *               NGAGE_LCD_DATA_BASE_PIN + 5  =  LCDDe5 (bus bit 5)
- *               NGAGE_LCD_DATA_BASE_PIN + 4  =  LCDDe4 (bus bit 4)
- *               NGAGE_LCD_DATA_BASE_PIN + 3  =  LCDDe3 (bus bit 3)
- *               NGAGE_LCD_DATA_BASE_PIN + 2  =  LCDDe2 (bus bit 2)
- *               NGAGE_LCD_DATA_BASE_PIN + 1  =  LCDDe1 (bus bit 1)
- *               NGAGE_LCD_DATA_BASE_PIN + 0  =  LCDDe0 (bus bit 0)
+ *               NGAGE_LCD_DATA_BASE_PIN + 5  =  LCDDa5 (bus bit 5)
+ *               NGAGE_LCD_DATA_BASE_PIN + 4  =  LCDDa4 (bus bit 4)
+ *               NGAGE_LCD_DATA_BASE_PIN + 3  =  LCDDa3 (bus bit 3)
+ *               NGAGE_LCD_DATA_BASE_PIN + 2  =  LCDDa2 (bus bit 2)
+ *               NGAGE_LCD_DATA_BASE_PIN + 1  =  LCDDa1 (bus bit 1)
+ *               NGAGE_LCD_DATA_BASE_PIN + 0  =  LCDDa0 (bus bit 0)
  *
  *  CLOCK PIN  Any GPIO; fully independent of the data pin group.
  *             The PIO detects rising edges and is not restricted to being

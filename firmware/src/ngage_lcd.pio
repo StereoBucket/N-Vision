@@ -6,12 +6,12 @@
 ;;              Wire MSB-first so the captured byte matches the raw bus word:
 ;;                in_base+7 = LCDM   (bus bit 7)
 ;;                in_base+6 = LCDFSP (bus bit 6)
-;;                in_base+5 = LCDDe5 (bus bit 5)
-;;                in_base+4 = LCDDe4 (bus bit 4)
-;;                in_base+3 = LCDDe3 (bus bit 3)
-;;                in_base+2 = LCDDe2 (bus bit 2)
-;;                in_base+1 = LCDDe1 (bus bit 1)
-;;                in_base+0 = LCDDe0 (bus bit 0)
+;;                in_base+5 = LCDDa5 (bus bit 5)
+;;                in_base+4 = LCDDa4 (bus bit 4)
+;;                in_base+3 = LCDDa3 (bus bit 3)
+;;                in_base+2 = LCDDa2 (bus bit 2)
+;;                in_base+1 = LCDDa1 (bus bit 1)
+;;                in_base+0 = LCDDa0 (bus bit 0)
 ;;
 ;; CLOCK PIN  : any GPIO, configured with sm_config_set_jmp_pin().
 ;;              Rising-edge triggered; fully independent of the data pin group.
@@ -40,7 +40,7 @@ sample:
 //   sm            : state machine index
 //   offset        : instruction-memory offset from pio_add_program()
 //   data_base_pin : first of 8 consecutive input GPIOs
-//                   (wire in_base+7 = LCDM, in_base+0 = LCDDe0)
+//                   (wire in_base+7 = LCDM, in_base+0 = LCDDa0)
 //   clk_pin       : clock GPIO (independent of data_base_pin)
 //   clk_div       : PIO clock divider (1.0f = full system clock)
 // ---------------------------------------------------------------------------

@@ -24,12 +24,12 @@
   * MSB-first as documented in ngage_lcd.h):                                *
   *   bit 7 : LCDM       mode:  1 = pixel-data word, 0 = command word       *
   *   bit 6 : LCDFSP     frame start pulse                                  *
-  *   bit 5 : LCDDe5     display data bus, bit 5                            *
-  *   bit 4 : LCDDe4     display data bus, bit 4                            *
-  *   bit 3 : LCDDe3     display data bus, bit 3                            *
-  *   bit 2 : LCDDe2     display data bus, bit 2                            *
-  *   bit 1 : LCDDe1     display data bus, bit 1                            *
-  *   bit 0 : LCDDe0     display data bus, bit 0                            *
+  *   bit 5 : LCDDa5     display data bus, bit 5                            *
+  *   bit 4 : LCDDa4     display data bus, bit 4                            *
+  *   bit 3 : LCDDa3     display data bus, bit 3                            *
+  *   bit 2 : LCDDa2     display data bus, bit 2                            *
+  *   bit 1 : LCDDa1     display data bus, bit 1                            *
+  *   bit 0 : LCDDa0     display data bus, bit 0                            *
   * ----------------------------------------------------------------------- */
 #define LCDM             0x80u
 #define LCD_PAYLOAD_MASK 0x7Fu  // bits 6-0.
@@ -37,7 +37,7 @@
 #define LCDDISPClk       0x5Cu  // display pixel-clock strobe (LCDM = 0).
 
 // Nibble decode constants (see decoder.c for full explanation).
-#define NIB_DELTA_BIT    3    // LCDDe3 position within a low nibble.
+#define NIB_DELTA_BIT    3    // LCDDa3 position within a low nibble.
 #define NIB_DATA_MASK    0x7  // bits 2-0: colour-data pins per nibble.
 
 // Live RGB565 display buffer - single definition; extern-declared in
@@ -89,11 +89,11 @@ static void write_pixel(int x, int y, int r, int g, int b)
  * process_nibbles                                                         *
  *                                                                         *
  * Decodes one RGB pixel from three consecutive nibbles:                   *
- *   n0 (high nibble): [LCDM(1) | LCDFSP | LCDDe5 | LCDDe4]                *
- *   n1 (low  nibble): [LCDDe3  | LCDDe2 | LCDDe1 | LCDDe0]                *
+ *   n0 (high nibble): [LCDM(1) | LCDFSP | LCDDa5 | LCDDa4]                *
+ *   n1 (low  nibble): [LCDDa3  | LCDDa2 | LCDDa1 | LCDDa0]                *
  *   n2 (high nibble): same layout as n0                                   *
  *                                                                         *
- * LCDDe3 (bit 3 of every low nibble) is a 1-bit delta predictor for the   *
+ * LCDDa3 (bit 3 of every low nibble) is a 1-bit delta predictor for the   *
  * channel MSB; high nibbles always carry LCDM=1 so their bit 3 is masked. *
  * ----------------------------------------------------------------------- */
 static void process_nibbles(int n0, int n1, int n2)
@@ -132,8 +132,8 @@ static void process_pixel_byte(uint8_t b)
     int i;
     int new_nibs[2];
 
-    new_nibs[0] = (b >> 4) & 0xF; // high nibble: [LCDM | LCDFSP | LCDDe5 | LCDDe4]
-    new_nibs[1] = b & 0xF;        // low  nibble: [LCDDe3 | LCDDe2 | LCDDe1 | LCDDe0]
+    new_nibs[0] = (b >> 4) & 0xF; // high nibble: [LCDM | LCDFSP | LCDDa5 | LCDDa4]
+    new_nibs[1] = b & 0xF;        // low  nibble: [LCDDa3 | LCDDa2 | LCDDa1 | LCDDa0]
 
     for (i = 0; i < 2; i++)
     {
